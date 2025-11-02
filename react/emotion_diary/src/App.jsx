@@ -75,22 +75,7 @@ function App() {
     })
   }
   return (
-    <> 
-      <button
-        onClick={() => { 
-          onCreate(new Date().getTime(),1,"테스트으으으")
-        }}
-      >ㅅㄷㄴㅅ</button>
-      <button
-        onClick={() => { 
-          onUpdate(1, new Date().getTime(),3,"수정된 일기")
-        }}
-      >수정test</button>
-      <button
-        onClick={() => { 
-          onDelete(1)
-        }}
-      >삭제test</button>
+    <>
       <DiaryStateContext value={data}>
         <DiaryDispatchContext
           value={{
