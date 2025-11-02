@@ -1,0 +1,23 @@
+.Header{
+    display: flex;
+    align-items: center;
+    padding: 20px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.Header > div{
+    display: flex;
+}
+.Header .Header_center{
+    width: 50%;
+    font-size: 25px;
+    justify-content: center;
+}
+.Header_left{
+    width: 25%;
+    justify-content: left;
+}
+.Header_right{
+    width: 25%;
+    justify-content: right;
+}
