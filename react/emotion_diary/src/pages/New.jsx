@@ -2,12 +2,14 @@ import Header from "../components/Header";
 import Button from "../components/Button";
 import { useNavigate } from 'react-router-dom';
 import Editor from "../components/Editor";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { DiaryDispatchContext } from "../App";
+import usePageTitle from "../hook/usePageTitle";
 
 const New = () => {
     const { onCreate } = useContext(DiaryDispatchContext);
     const nav = useNavigate();
+    usePageTitle("새 일기 쓰기");
 
     const onSubmit = (input) => {
         onCreate(
