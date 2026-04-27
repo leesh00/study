@@ -1,7 +1,7 @@
 'use client'
 
 import { useActionState, useState } from 'react'
-import { updateRetro } from '@/app/retros/actions'
+import { updateRetro, ActionState } from '@/app/retros/actions'
 import { Retro } from '@/types'
 
 interface Props {
@@ -15,7 +15,7 @@ export default function EditForm({ retro }: Props) {
 
   // id를 bind로 고정한 updateRetro를 useActionState에 전달
   const updateRetroWithId = updateRetro.bind(null, retro.id)
-  const [state, formAction] = useActionState(updateRetroWithId, null)
+  const [state, formAction] = useActionState<ActionState, FormData>(updateRetroWithId, null)
 
   // 태그 추가 (중복 제거)
   const addTag = () => {

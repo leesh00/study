@@ -5,9 +5,19 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import { retroSchema } from '@/lib/validations'
 
+// Server Action 반환 타입 정의
+export type ActionState = {
+  error?: {
+    title?: string[]
+    content?: string[]
+    tags?: string[]
+    general?: string
+  }
+} | null
+
 // 새 회고 생성 Server Action
 // useActionState와 함께 사용하므로 prevState를 첫 번째 인자로 받음
-export async function createRetro(prevState: unknown, formData: FormData) {
+export async function createRetro(prevState: ActionState, formData: FormData): Promise<ActionState> {
   const data = {
     title: formData.get('title') as string,
     content: formData.get('content') as string,
@@ -38,7 +48,7 @@ export async function createRetro(prevState: unknown, formData: FormData) {
 
 // 기존 회고 수정 Server Action
 // bind로 id를 미리 바인딩한 후 useActionState에 전달
-export async function updateRetro(id: string, prevState: unknown, formData: FormData) {
+export async function updateRetro(id: string, prevState: ActionState, formData: FormData): Promise<ActionState> {
   const data = {
     title: formData.get('title') as string,
     content: formData.get('content') as string,

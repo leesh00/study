@@ -1,7 +1,7 @@
 'use client'
 
 import { useActionState, useState } from 'react'
-import { createRetro } from '../actions'
+import { createRetro, ActionState } from '../actions'
 
 export default function NewRetroPage() {
   // 태그 목록 상태
@@ -9,7 +9,7 @@ export default function NewRetroPage() {
   // 태그 입력창 상태
   const [tagInput, setTagInput] = useState('')
   // Server Action 상태 (에러 메시지 등)
-  const [state, formAction] = useActionState(createRetro, null)
+  const [state, formAction] = useActionState<ActionState, FormData>(createRetro, null)
 
   // 태그 추가 (중복 제거)
   const addTag = () => {
