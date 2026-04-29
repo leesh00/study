@@ -25,7 +25,7 @@ export default function NewRetroPage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-8">
+    <div className="max-w-2xl mx-auto p-4 md:p-8">
       <h1 className="text-3xl font-bold mb-8">새 회고 작성</h1>
 
       <form action={formAction} className="space-y-6">
@@ -107,7 +107,7 @@ export default function NewRetroPage() {
         </div>
 
         {/* 제출/취소 버튼 */}
-        <div className="flex gap-4">
+        <div className="flex flex-col sm:flex-row gap-3">
           <button
             type="submit"
             className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"

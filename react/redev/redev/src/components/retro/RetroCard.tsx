@@ -9,7 +9,7 @@ interface Props {
 export default function RetroCard({ retro }: Props) {
   return (
     <a href={`/retros/${retro.id}`} className="block">
-      <div className="p-6 border border-gray-200 rounded-xl hover:border-blue-300 hover:shadow-sm transition-all">
+      <div className="p-4 md:p-6 border border-gray-200 rounded-xl hover:border-blue-300 hover:shadow-sm transition-all">
         {/* 날짜 */}
         <div className="flex justify-end mb-3">
           <span className="text-gray-400 text-sm">

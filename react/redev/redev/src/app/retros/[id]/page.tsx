@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase'
 import { notFound } from 'next/navigation'
 import DeleteButton from '@/components/retro/DeleteButton'
+import EditButton from '@/components/retro/EditButton'
 
 interface Props {
   params: Promise<{ id: string }>
@@ -51,13 +52,10 @@ export default async function RetroDetailPage({ params }: Props) {
       </div>
 
       <div className="flex gap-3">
-        <a
-          href={`/retros/${retro.id}/edit`}
-          className="px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 text-sm"
-        >
-          수정
-        </a>
-        <DeleteButton id={retro.id} />
+        <div className="flex gap-3">
+          <EditButton id={retro.id} />
+          <DeleteButton id={retro.id} />
+        </div>
       </div>
     </main>
   )

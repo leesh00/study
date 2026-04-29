@@ -9,6 +9,7 @@ interface Props {
 }
 
 export default function EditForm({ retro }: Props) {
+   console.log('EditForm 렌더링', retro) // 추가
   // 기존 태그 목록으로 초기화
   const [tags, setTags] = useState<string[]>(retro.tags)
   const [tagInput, setTagInput] = useState('')
@@ -29,7 +30,6 @@ export default function EditForm({ retro }: Props) {
   const removeTag = (tag: string) => {
     setTags(tags.filter(t => t !== tag))
   }
-
   return (
     <form action={formAction} className="space-y-6">
       {/* 제목 입력 (기존값 채워진 상태) */}
@@ -110,7 +110,7 @@ export default function EditForm({ retro }: Props) {
       </div>
 
       {/* 제출/취소 버튼 */}
-      <div className="flex gap-4">
+      <div className="flex flex-col sm:flex-row gap-3">
         <button
           type="submit"
           className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"

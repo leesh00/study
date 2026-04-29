@@ -14,7 +14,7 @@ interface Props {
 // 메인 페이지 (Server Component)
 // searchParams로 검색어/태그 필터를 받아 Supabase 쿼리에 적용
 export default async function HomePage({ searchParams }: Props) {
-  const { q, tag } = await searchParams
+  const { q, tag } = (await searchParams) ?? {}
   const supabase = createClient()
 
   // 기본 쿼리 (최신순 정렬)
@@ -23,12 +23,11 @@ export default async function HomePage({ searchParams }: Props) {
     .select('*')
     .order('created_at', { ascending: false })
 
-  // 검색어 필터 적용 (제목 + 내용 + 태그 통합 검색)
+  // 검색어 필터 적용 (제목 기반 부분 일치)
   if (q) {
-    query = query.or(
-      `title.ilike.%${q}%,content.ilike.%${q}%,tags.cs.{${q}}`
-    )
+    query = query.ilike('title', `%${q}%`)
   }
+
   // 태그 필터 적용 (배열 포함 여부 검사)
   if (tag) {
     query = query.contains('tags', [tag])
@@ -45,10 +44,10 @@ export default async function HomePage({ searchParams }: Props) {
     <main className="max-w-3xl mx-auto p-8">
       {/* 헤더 */}
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl md:text-3xl font-bold">회개하라! 🙏</h1>
+        <h1 className="text-3xl font-bold">회개하라! 🙏</h1>
         <a
           href="/retros/new"
-          className="px-3 py-2 md:px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm md:text-base whitespace-nowrap"
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
         >
           + 새 회고
         </a>
