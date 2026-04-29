@@ -3,6 +3,7 @@ import RetroCard from '@/components/retro/RetroCard'
 import SearchBar from '@/components/retro/SearchBar'
 import TagFilter from '@/components/retro/TagFilter'
 import { Retro } from '@/types'
+import { Suspense } from 'react'
 
 interface Props {
   searchParams: Promise<{
@@ -55,10 +56,14 @@ export default async function HomePage({ searchParams }: Props) {
       </div>
 
       {/* 검색창 */}
-      <SearchBar />
+      <Suspense fallback={<div className="h-10 w-full bg-gray-200 rounded-lg animate-pulse mb-6" />}>
+        <SearchBar />
+      </Suspense>
 
       {/* 태그 필터 */}
-      <TagFilter tags={allTags} />
+      <Suspense fallback={<div className="h-7 w-full bg-gray-200 rounded-lg animate-pulse mb-6" />}>
+        <TagFilter tags={allTags} />
+      </Suspense>
 
       {/* 검색/필터 결과 표시 */}
       {(q || tag) && (
