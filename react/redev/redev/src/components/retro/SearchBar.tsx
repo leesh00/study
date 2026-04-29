@@ -1,17 +1,14 @@
 'use client'
 
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 
-// 검색어를 URL searchParams로 전달하는 검색창 컴포넌트
-// 서버 컴포넌트(page.tsx)에서 searchParams로 받아 DB 쿼리에 활용
-export default function SearchBar() {
+// 검색창 내부 컴포넌트 (useSearchParams 사용)
+function SearchBarInner() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  // 현재 URL의 검색어로 초기값 설정
   const [query, setQuery] = useState(searchParams.get('q') || '')
 
-  // 검색 실행 시 URL에 q 파라미터 추가
   const handleSearch = () => {
     const params = new URLSearchParams(searchParams.toString())
     if (query.trim()) {
@@ -31,7 +28,7 @@ export default function SearchBar() {
         onKeyDown={(e) => {
           if (e.key === 'Enter') handleSearch()
         }}
-        placeholder="검색어를 입력하세요"
+        placeholder="제목, 내용, 태그로 검색"
         className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
       <button
@@ -41,5 +38,16 @@ export default function SearchBar() {
         검색
       </button>
     </div>
+  )
+}
+
+// useSearchParams를 Suspense로 감싸서 export
+export default function SearchBar() {
+  return (
+    <Suspense fallback={
+      <div className="h-10 w-full bg-gray-200 rounded-lg animate-pulse mb-6" />
+    }>
+      <SearchBarInner />
+    </Suspense>
   )
 }

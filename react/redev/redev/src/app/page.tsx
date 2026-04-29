@@ -1,9 +1,9 @@
+import { Suspense } from 'react'
 import { createClient } from '@/lib/supabase'
 import RetroCard from '@/components/retro/RetroCard'
 import SearchBar from '@/components/retro/SearchBar'
 import TagFilter from '@/components/retro/TagFilter'
 import { Retro } from '@/types'
-import { Suspense } from 'react'
 
 interface Props {
   searchParams: Promise<{
@@ -15,7 +15,7 @@ interface Props {
 // 메인 페이지 (Server Component)
 // searchParams로 검색어/태그 필터를 받아 Supabase 쿼리에 적용
 export default async function HomePage({ searchParams }: Props) {
-  const { q, tag } = await searchParams
+  const { q, tag } = (await searchParams) ?? {}
   const supabase = createClient()
 
   // 기본 쿼리 (최신순 정렬)
@@ -30,6 +30,7 @@ export default async function HomePage({ searchParams }: Props) {
       `title.ilike.%${q}%,content.ilike.%${q}%,tags.cs.{${q}}`
     )
   }
+
   // 태그 필터 적용 (배열 포함 여부 검사)
   if (tag) {
     query = query.contains('tags', [tag])
@@ -55,13 +56,17 @@ export default async function HomePage({ searchParams }: Props) {
         </a>
       </div>
 
-      {/* 검색창 */}
-      <Suspense fallback={<div className="h-10 w-full bg-gray-200 rounded-lg animate-pulse mb-6" />}>
+      {/* 검색창 - useSearchParams 사용으로 Suspense 필수 */}
+      <Suspense fallback={
+        <div className="h-10 w-full bg-gray-200 rounded-lg animate-pulse mb-6" />
+      }>
         <SearchBar />
       </Suspense>
 
-      {/* 태그 필터 */}
-      <Suspense fallback={<div className="h-7 w-full bg-gray-200 rounded-lg animate-pulse mb-6" />}>
+      {/* 태그 필터 - useSearchParams 사용으로 Suspense 필수 */}
+      <Suspense fallback={
+        <div className="h-7 w-full bg-gray-200 rounded-lg animate-pulse mb-6" />
+      }>
         <TagFilter tags={allTags} />
       </Suspense>
 
