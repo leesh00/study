@@ -7,7 +7,6 @@ interface Props {
   tags: string[]
 }
 
-// 태그 필터 내부 컴포넌트 (useSearchParams 사용)
 function TagFilterInner({ tags }: Props) {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -26,15 +25,15 @@ function TagFilterInner({ tags }: Props) {
   if (tags.length === 0) return null
 
   return (
-    <div className="flex flex-wrap gap-2 mb-6">
+    <div className="flex flex-wrap gap-2">
       {tags.map(tag => (
         <button
           key={tag}
           onClick={() => handleTagClick(tag)}
-          className={`px-3 py-1 rounded-full text-sm transition-colors ${
+          className={`px-3 py-1 rounded-full text-sm border transition-colors ${
             selectedTag === tag
-              ? 'bg-blue-600 text-white'
-              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              ? 'bg-gray-900 text-white border-gray-900'
+              : 'bg-white text-gray-600 border-gray-300 hover:border-gray-500'
           }`}
         >
           #{tag}
@@ -44,11 +43,10 @@ function TagFilterInner({ tags }: Props) {
   )
 }
 
-// useSearchParams를 Suspense로 감싸서 export
 export default function TagFilter({ tags }: Props) {
   return (
     <Suspense fallback={
-      <div className="h-7 w-full bg-gray-200 rounded-lg animate-pulse mb-6" />
+      <div className="h-8 w-full bg-gray-100 rounded-lg animate-pulse" />
     }>
       <TagFilterInner tags={tags} />
     </Suspense>

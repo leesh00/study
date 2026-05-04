@@ -1,24 +1,18 @@
 'use client'
 
 import { useActionState, useState } from 'react'
-import { updateRetro, ActionState } from '@/app/retros/actions'
-import { Retro, Space } from '@/types'
+import { createRetro, ActionState } from '@/app/retros/actions'
+import { Space } from '@/types'
 
 interface Props {
-  retro: Retro
   spaces: Space[]
 }
 
-// 회고 수정 폼 (Client Component)
-// 기존 회고 데이터로 초기값 설정
-export default function EditForm({ retro, spaces }: Props) {
-  // 기존 태그 목록으로 초기화
-  const [tags, setTags] = useState<string[]>(retro.tags)
+// 회고 작성 폼 (Client Component)
+export default function NewRetroForm({ spaces }: Props) {
+  const [tags, setTags] = useState<string[]>([])
   const [tagInput, setTagInput] = useState<string>('')
-
-  // id를 bind로 고정한 updateRetro를 useActionState에 전달
-  const updateRetroWithId = updateRetro.bind(null, retro.id)
-  const [state, formAction] = useActionState<ActionState, FormData>(updateRetroWithId, null)
+  const [state, formAction] = useActionState<ActionState, FormData>(createRetro, null)
 
   // 태그 추가 (중복 제거)
   const addTag = (): void => {
@@ -55,12 +49,11 @@ export default function EditForm({ retro, spaces }: Props) {
   return (
     <form action={formAction} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
 
-      {/* 스페이스 선택 (기존값 선택된 상태) */}
+      {/* 스페이스 선택 */}
       <div>
         <label style={labelStyle}>스페이스</label>
         <select
           name="space_id"
-          defaultValue={retro.space_id ?? ''}
           style={{ ...inputStyle, cursor: 'pointer' }}
         >
           <option value="">선택 안함</option>
@@ -70,13 +63,13 @@ export default function EditForm({ retro, spaces }: Props) {
         </select>
       </div>
 
-      {/* 제목 입력 (기존값 채워진 상태) */}
+      {/* 제목 입력 */}
       <div>
         <label style={labelStyle}>제목</label>
         <input
           type="text"
           name="title"
-          defaultValue={retro.title}
+          placeholder="오늘 배운 것을 한 줄로"
           style={inputStyle}
         />
         {state?.error?.title && (
@@ -84,13 +77,13 @@ export default function EditForm({ retro, spaces }: Props) {
         )}
       </div>
 
-      {/* 내용 입력 (기존값 채워진 상태) */}
+      {/* 내용 입력 */}
       <div>
         <label style={labelStyle}>내용</label>
         <textarea
           name="content"
           rows={8}
-          defaultValue={retro.content}
+          placeholder="구체적으로 무엇을 배웠고, 왜 중요한지 작성해보세요"
           style={{ ...inputStyle, resize: 'vertical' }}
         />
         {state?.error?.content && (
@@ -98,7 +91,7 @@ export default function EditForm({ retro, spaces }: Props) {
         )}
       </div>
 
-      {/* 태그 입력 (기존 태그 채워진 상태) */}
+      {/* 태그 입력 */}
       <div>
         <label style={labelStyle}>태그</label>
         <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
@@ -179,10 +172,10 @@ export default function EditForm({ retro, spaces }: Props) {
             cursor: 'pointer',
           }}
         >
-          수정 완료
+          회고 저장
         </button>
         <a
-          href={`/retros/${retro.id}`}
+          href="/retros"
           style={{
             padding: '10px 20px',
             border: '1px solid #e8eef8',

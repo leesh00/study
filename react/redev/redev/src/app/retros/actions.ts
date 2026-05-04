@@ -11,20 +11,23 @@ export type ActionState = {
     title?: string[]
     content?: string[]
     tags?: string[]
+    space_id?: string[]
     general?: string
   }
 } | null
 
 // 새 회고 생성 Server Action
-// useActionState와 함께 사용하므로 prevState를 첫 번째 인자로 받음
-export async function createRetro(prevState: ActionState, formData: FormData): Promise<ActionState> {
+export async function createRetro(
+  prevState: ActionState,
+  formData: FormData
+): Promise<ActionState> {
   const data = {
     title: formData.get('title') as string,
     content: formData.get('content') as string,
     tags: JSON.parse(formData.get('tags') as string || '[]'),
+    space_id: formData.get('space_id') as string || null,
   }
 
-  // Zod로 입력값 유효성 검증
   const parsed = retroSchema.safeParse(data)
   if (!parsed.success) {
     return { error: parsed.error.flatten().fieldErrors }
@@ -35,27 +38,29 @@ export async function createRetro(prevState: ActionState, formData: FormData): P
     title: parsed.data.title,
     content: parsed.data.content,
     tags: parsed.data.tags,
+    space_id: parsed.data.space_id ?? null,
   })
 
-  if (error) {
-    return { error: { general: error.message } }
-  }
+  if (error) return { error: { general: error.message } }
 
-  // 목록 페이지 캐시 무효화 후 이동
   revalidatePath('/')
-  redirect('/')
+  revalidatePath('/retros')
+  redirect('/retros')
 }
 
 // 기존 회고 수정 Server Action
-// bind로 id를 미리 바인딩한 후 useActionState에 전달
-export async function updateRetro(id: string, prevState: ActionState, formData: FormData): Promise<ActionState> {
+export async function updateRetro(
+  id: string,
+  prevState: ActionState,
+  formData: FormData
+): Promise<ActionState> {
   const data = {
     title: formData.get('title') as string,
     content: formData.get('content') as string,
     tags: JSON.parse(formData.get('tags') as string || '[]'),
+    space_id: formData.get('space_id') as string || null,
   }
 
-  // Zod로 입력값 유효성 검증
   const parsed = retroSchema.safeParse(data)
   if (!parsed.success) {
     return { error: parsed.error.flatten().fieldErrors }
@@ -68,23 +73,22 @@ export async function updateRetro(id: string, prevState: ActionState, formData: 
       title: parsed.data.title,
       content: parsed.data.content,
       tags: parsed.data.tags,
+      space_id: parsed.data.space_id ?? null,
     })
     .eq('id', id)
 
-  if (error) {
-    return { error: { general: error.message } }
-  }
+  if (error) return { error: { general: error.message } }
 
-  // 목록 + 상세 페이지 캐시 무효화 후 상세로 이동
   revalidatePath('/')
+  revalidatePath('/retros')
   revalidatePath(`/retros/${id}`)
   redirect(`/retros/${id}`)
 }
 
 // 회고 삭제 Server Action
-// 삭제 후 목록 페이지 캐시 무효화
-export async function deleteRetro(id: string) {
+export async function deleteRetro(id: string): Promise<void> {
   const supabase = createClient()
   await supabase.from('retros').delete().eq('id', id)
   revalidatePath('/')
+  revalidatePath('/retros')
 }

@@ -3,7 +3,6 @@
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useState, Suspense } from 'react'
 
-// 검색창 내부 컴포넌트 (useSearchParams 사용)
 function SearchBarInner() {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -20,7 +19,20 @@ function SearchBarInner() {
   }
 
   return (
-    <div className="flex gap-2 mb-6">
+    <div className="flex items-center gap-2 border border-gray-200 rounded-lg px-3 py-1.5 w-64">
+      <svg
+        className="w-4 h-4 text-gray-400 shrink-0"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+        />
+      </svg>
       <input
         type="text"
         value={query}
@@ -28,24 +40,17 @@ function SearchBarInner() {
         onKeyDown={(e) => {
           if (e.key === 'Enter') handleSearch()
         }}
-        placeholder="제목, 내용, 태그로 검색"
-        className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        placeholder="검색"
+        className="text-sm outline-none w-full bg-transparent"
       />
-      <button
-        onClick={handleSearch}
-        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-      >
-        검색
-      </button>
     </div>
   )
 }
 
-// useSearchParams를 Suspense로 감싸서 export
 export default function SearchBar() {
   return (
     <Suspense fallback={
-      <div className="h-10 w-full bg-gray-200 rounded-lg animate-pulse mb-6" />
+      <div className="h-9 w-64 bg-gray-100 rounded-lg animate-pulse" />
     }>
       <SearchBarInner />
     </Suspense>

@@ -1,3 +1,47 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@source "../components";
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    color: #111;
+    background: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  button {
+    cursor: pointer;
+    background: none;
+    border: none;
+    font: inherit;
+  }
+}
+
+
+/* hover */
+.retro-card-link {
+  text-decoration: none;
+  display: block;
+}
+
+.retro-card {
+  padding: 16px;
+  border: 1px solid #e8eef8;
+  border-radius: 12px;
+  background: #ffffff;
+  transition: border-color 0.15s;
+}
+
+.retro-card:hover {
+  border-color: #d6e0f5;
+}

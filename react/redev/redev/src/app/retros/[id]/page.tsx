@@ -7,56 +7,91 @@ interface Props {
   params: Promise<{ id: string }>
 }
 
-// 회고 상세 페이지
+// 회고 상세 페이지 (Server Component)
 // id로 Supabase에서 단건 조회 후 표시
 export default async function RetroDetailPage({ params }: Props) {
   const { id } = await params
   const supabase = createClient()
   const { data: retro } = await supabase
     .from('retros')
-    .select('*')
+    .select('*, space:spaces(id, name, created_at)')
     .eq('id', id)
     .single()
 
   if (!retro) notFound()
 
   return (
-    <main className="max-w-3xl mx-auto p-8">
-      <div className="mb-6">
-        <a href="/" className="text-blue-500 hover:underline text-sm">
+    <div style={{
+      background: '#ffffff',
+      border: '1px solid #e8eef8',
+      borderRadius: '12px',
+      padding: '24px',
+      maxWidth: '720px',
+      margin: '0 auto',
+    }}>
+      {/* 목록으로 돌아가기 */}
+      <div style={{ marginBottom: '20px' }}>
+        <a href="/retros" style={{ fontSize: '13px', color: '#7fb3ff', textDecoration: 'none' }}>
           ← 목록으로
         </a>
       </div>
 
-      <div className="flex items-center justify-end mb-4">
-        <span className="text-gray-400 text-sm">
+      {/* 스페이스 + 날짜 */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+        {retro.space ? (
+          <span style={{
+            fontSize: '12px',
+            padding: '3px 12px',
+            background: '#f5f8ff',
+            color: '#6b7684',
+            borderRadius: '99px',
+            border: '1px solid #e8eef8',
+          }}>
+            {retro.space.name}
+          </span>
+        ) : <span />}
+        <span style={{ fontSize: '12px', color: '#8b95a1' }}>
           {new Date(retro.created_at).toLocaleDateString('ko-KR')}
         </span>
       </div>
 
-      <h1 className="text-3xl font-bold mb-6">{retro.title}</h1>
+      {/* 제목 */}
+      <h1 style={{ fontSize: '22px', fontWeight: 500, color: '#191f28', marginBottom: '16px' }}>
+        {retro.title}
+      </h1>
 
-      <p className="text-gray-700 leading-relaxed whitespace-pre-wrap mb-8">
+      {/* 본문 내용 */}
+      <p style={{
+        fontSize: '15px',
+        color: '#6b7684',
+        lineHeight: 1.8,
+        whiteSpace: 'pre-wrap',
+        marginBottom: '24px',
+      }}>
         {retro.content}
       </p>
 
-      <div className="flex flex-wrap gap-2 mb-8">
+      {/* 태그 목록 */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '32px' }}>
         {retro.tags.map((tag: string) => (
-          <span
-            key={tag}
-            className="px-3 py-1 bg-gray-100 text-gray-600 text-sm rounded-full"
-          >
+          <span key={tag} style={{
+            fontSize: '12px',
+            padding: '4px 12px',
+            background: '#f5f8ff',
+            color: '#6b7684',
+            borderRadius: '99px',
+            border: '1px solid #e8eef8',
+          }}>
             #{tag}
           </span>
         ))}
       </div>
 
-      <div className="flex gap-3">
-        <div className="flex gap-3">
-          <EditButton id={retro.id} />
-          <DeleteButton id={retro.id} />
-        </div>
+      {/* 수정/삭제 버튼 */}
+      <div style={{ display: 'flex', gap: '8px', borderTop: '1px solid #e8eef8', paddingTop: '20px' }}>
+        <EditButton id={retro.id} />
+        <DeleteButton id={retro.id} />
       </div>
-    </main>
+    </div>
   )
 }
