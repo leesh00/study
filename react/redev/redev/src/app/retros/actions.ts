@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase'
+import { createServerClient } from '@/lib/supabase-server'
 import { retroSchema } from '@/lib/validations'
 
 // Server Action 반환 타입 정의
@@ -33,12 +33,18 @@ export async function createRetro(
     return { error: parsed.error.flatten().fieldErrors }
   }
 
-  const supabase = createClient()
+  const supabase = await createServerClient()
+
+  // 현재 로그인한 사용자 정보 조회
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: { general: '로그인이 필요합니다' } }
+
   const { error } = await supabase.from('retros').insert({
     title: parsed.data.title,
     content: parsed.data.content,
     tags: parsed.data.tags,
     space_id: parsed.data.space_id ?? null,
+    user_id: user.id,
   })
 
   if (error) return { error: { general: error.message } }
@@ -66,7 +72,12 @@ export async function updateRetro(
     return { error: parsed.error.flatten().fieldErrors }
   }
 
-  const supabase = createClient()
+  const supabase = await createServerClient()
+
+  // 현재 로그인한 사용자 정보 조회
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: { general: '로그인이 필요합니다' } }
+
   const { error } = await supabase
     .from('retros')
     .update({
@@ -76,6 +87,7 @@ export async function updateRetro(
       space_id: parsed.data.space_id ?? null,
     })
     .eq('id', id)
+    .eq('user_id', user.id)
 
   if (error) return { error: { general: error.message } }
 
@@ -87,8 +99,18 @@ export async function updateRetro(
 
 // 회고 삭제 Server Action
 export async function deleteRetro(id: string): Promise<void> {
-  const supabase = createClient()
-  await supabase.from('retros').delete().eq('id', id)
+  const supabase = await createServerClient()
+
+  // 현재 로그인한 사용자 정보 조회
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return
+
+  await supabase
+    .from('retros')
+    .delete()
+    .eq('id', id)
+    .eq('user_id', user.id)
+
   revalidatePath('/')
   revalidatePath('/retros')
 }

@@ -1,10 +1,10 @@
-import { createClient } from '@/lib/supabase'
+import { createServerClient } from '@/lib/supabase-server'
 import { Retro } from '@/types'
 
 // 대시보드 페이지 (Server Component)
 // 전체 회고 데이터를 집계하여 통계 표시
 export default async function DashboardPage() {
-  const supabase = createClient()
+  const supabase = await createServerClient()
 
   // 전체 회고 조회
   const { data: retros, error } = await supabase

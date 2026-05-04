@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import Header from '@/components/layout/Header'
+import { createServerClient } from '@/lib/supabase-server'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -18,15 +19,18 @@ export const metadata: Metadata = {
   description: '개발 인사이트 회고 아카이브',
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const supabase = await createServerClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
   return (
     <html lang="ko" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body style={{ minHeight: '100vh', background: '#f5f8ff' }}>
-        <Header />
+        <Header email={user?.email ?? ''} />
         <div style={{ maxWidth: '960px', margin: '0 auto', padding: '24px' }}>
           {children}
         </div>

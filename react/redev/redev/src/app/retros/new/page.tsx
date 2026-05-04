@@ -1,11 +1,11 @@
-import { createClient } from '@/lib/supabase'
+import { createServerClient } from '@/lib/supabase-server'
 import NewRetroForm from '@/components/retro/NewRetroForm'
 import { Space } from '@/types'
 
 // 회고 작성 페이지 (Server Component)
 // 스페이스 목록을 불러와 폼에 전달
 export default async function NewRetroPage() {
-  const supabase = createClient()
+  const supabase = await createServerClient()
   const { data: spaces } = await supabase
     .from('spaces')
     .select('*')

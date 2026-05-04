@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import { createClient } from '@/lib/supabase'
+import { createServerClient } from '@/lib/supabase-server'
 import RetroCard from '@/components/retro/RetroCard'
 import TagFilter from '@/components/retro/TagFilter'
 import SpaceFilter from '@/components/retro/SpaceFilter'
@@ -17,7 +17,7 @@ interface Props {
 // searchParams로 검색어/태그/스페이스 필터를 받아 Supabase 쿼리에 적용
 export default async function RetrosPage({ searchParams }: Props) {
   const { q, tag, space_id } = (await searchParams) ?? {}
-  const supabase = createClient()
+  const supabase = await createServerClient()
 
   // 스페이스 목록 조회
   const { data: spaces } = await supabase

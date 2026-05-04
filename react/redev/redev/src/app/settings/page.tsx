@@ -1,10 +1,10 @@
-import { createClient } from '@/lib/supabase'
+import { createServerClient } from '@/lib/supabase-server'
 import SpaceForm from './SpaceForm'
 
 // 스페이스 설정 페이지 (Server Component)
 // 스페이스 목록을 불러와 SpaceForm에 전달
 export default async function SettingsPage() {
-  const supabase = createClient()
+  const supabase = await createServerClient()
   const { data: spaces } = await supabase
     .from('spaces')
     .select('*')

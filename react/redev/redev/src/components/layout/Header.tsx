@@ -2,6 +2,7 @@
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useState, Suspense } from 'react'
+import LogoutButton from './LogoutButton'
 
 function SearchInput() {
   const router = useRouter()
@@ -52,7 +53,7 @@ function SearchInput() {
 }
 
 // 헤더 내부 컴포넌트 — usePathname 사용
-function HeaderInner() {
+function HeaderInner({ email }: { email: string }) {
   const pathname = usePathname()
 
   const tabStyle = (active: boolean) => ({
@@ -111,6 +112,10 @@ function HeaderInner() {
           }}>
             설정
           </a>
+          <span style={{ fontSize: '13px', color: '#8b95a1' }}>
+            {email}
+          </span>
+          <LogoutButton />
           <a href="/retros/new" style={{
             fontSize: '13px',
             padding: '6px 16px',
@@ -130,7 +135,7 @@ function HeaderInner() {
 }
 
 // Suspense로 감싸서 export
-export default function Header() {
+export default function Header({ email }: { email: string }) {
   return (
     <Suspense fallback={
       <div style={{
@@ -142,7 +147,7 @@ export default function Header() {
         zIndex: 10,
       }} />
     }>
-      <HeaderInner />
+      <HeaderInner email={email} />
     </Suspense>
   )
 }

@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase'
+import { createServerClient } from '@/lib/supabase-server'
 import { notFound } from 'next/navigation'
 import DeleteButton from '@/components/retro/DeleteButton'
 import EditButton from '@/components/retro/EditButton'
@@ -11,7 +11,7 @@ interface Props {
 // id로 Supabase에서 단건 조회 후 표시
 export default async function RetroDetailPage({ params }: Props) {
   const { id } = await params
-  const supabase = createClient()
+  const supabase = await createServerClient()
   const { data: retro } = await supabase
     .from('retros')
     .select('*, space:spaces(id, name, created_at)')

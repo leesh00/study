@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase'
+import { createServerClient } from '@/lib/supabase-server'
 import { notFound } from 'next/navigation'
 import EditForm from '@/components/retro/EditForm'
 import { Space } from '@/types'
@@ -11,7 +11,7 @@ interface Props {
 // 기존 회고 데이터와 스페이스 목록을 불러와 EditForm에 전달
 export default async function EditRetroPage({ params }: Props) {
   const { id } = await params
-  const supabase = createClient()
+  const supabase = await createServerClient()
 
   // 회고 데이터 조회
   const { data: retro } = await supabase
